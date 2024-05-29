@@ -6,30 +6,36 @@ import Box from "@mui/material/Box";
 import { Container, FormControl, Typography } from "@mui/material";
 import { UserService } from "src/Admin/Services/UserService";
 import { useEffect, useState } from "react";
+import Toaster from "src/components/Toaster/Toaster";
+import { useNavigate } from "react-router";
 
 
 export default function LoginPage() {
+    const navigate = useNavigate();
     const [service, Setservice] = useState(new UserService());
+    const [toast, settoast] = useState({ open: false, type: "", header: "", body: "" });
 
     const handleSubmit = async (e) => {
-        debugger;
         e.preventDefault();
-        debugger;
         var paylaod = {
             userName: e.currentTarget["userName"]?.value,
             password: e.currentTarget["password"]?.value,
         }
         var response = await service.authenticate(paylaod);
-        if (response != null && response?.data != null) {
-
+        if (response?.isSuccess) {
+            sessionStorage.setItem("user_name", paylaod["userName"]);
+            sessionStorage.setItem("user_token", response?.data[0]?.token);
+            navigate('/dashboards', { replace: true });
         }
         else {
-
+            settoast({ open: true, type: "error", header: "", body: response?.message })
         }
     };
 
     return (
         <>
+            <Toaster {...toast}></Toaster>
+
             <Container component="main" maxWidth="xs">
                 <Box
                     sx={{
@@ -79,12 +85,10 @@ export default function LoginPage() {
                     </Box>
 
                 </Box>
+
+
             </Container>
         </>
 
     );
-}
-
-function useForm(arg0: undefined[]): { register: any; handleSubmit: any; } {
-    throw new Error("Function not implemented.");
 }

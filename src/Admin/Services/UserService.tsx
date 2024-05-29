@@ -8,7 +8,6 @@ export class UserService extends BaseService {
 
     public async authenticate(input: any): Promise<any> {
         try {
-            debugger;
             const { data, status } = await axios.post(
                 this.baseUrl + 'Users/Authenticate',
                 input,
