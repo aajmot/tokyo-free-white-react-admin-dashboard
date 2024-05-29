@@ -8,14 +8,17 @@ import { UserService } from "src/Admin/Services/UserService";
 import { useEffect, useState } from "react";
 import Toaster from "src/components/Toaster/Toaster";
 import { useNavigate } from "react-router";
+import Loader from "src/components/Loader/Loader";
 
 
 export default function LoginPage() {
+    const [loader, setLoader] = useState({ loading: false });
     const navigate = useNavigate();
     const [service, Setservice] = useState(new UserService());
     const [toast, settoast] = useState({ open: false, type: "", header: "", body: "" });
 
     const handleSubmit = async (e) => {
+        setLoader({ loading: true });
         e.preventDefault();
         var paylaod = {
             userName: e.currentTarget["userName"]?.value,
@@ -30,12 +33,13 @@ export default function LoginPage() {
         else {
             settoast({ open: true, type: "error", header: "", body: response?.message })
         }
+        setLoader({ loading: false });
     };
 
     return (
         <>
             <Toaster {...toast}></Toaster>
-
+            <Loader {...loader} ></Loader>
             <Container component="main" maxWidth="xs">
                 <Box
                     sx={{
