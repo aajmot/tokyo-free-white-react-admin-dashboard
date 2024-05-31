@@ -7,12 +7,14 @@ interface PageTitleProps {
   heading?: string;
   subHeading?: string;
   docs?: string;
+  mode?: Function;
 }
 
 const PageTitle: FC<PageTitleProps> = ({
   heading = '',
   subHeading = '',
   docs = '',
+  mode = null,
   ...rest
 }) => {
   return (
@@ -29,16 +31,15 @@ const PageTitle: FC<PageTitleProps> = ({
         <Typography variant="subtitle2">{subHeading}</Typography>
       </Grid>
       <Grid item>
-        <Button
-          href={docs}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ mt: { xs: 2, md: 0 } }}
+        {mode && <Button onClick={() => {
+          mode(docs == "list" ? "add" : "list")
+        }}
           variant="contained"
+          sx={{ mt: { xs: 2, md: 0 } }}
           startIcon={<AddTwoToneIcon fontSize="small" />}
         >
-          {heading} Documentation
-        </Button>
+          {docs == "list" ? "Add" : "Cancel"}
+        </Button>}
       </Grid>
     </Grid>
   );
@@ -47,7 +48,8 @@ const PageTitle: FC<PageTitleProps> = ({
 PageTitle.propTypes = {
   heading: PropTypes.string,
   subHeading: PropTypes.string,
-  docs: PropTypes.string
+  docs: PropTypes.string,
+  mode: PropTypes.func,
 };
 
 export default PageTitle;

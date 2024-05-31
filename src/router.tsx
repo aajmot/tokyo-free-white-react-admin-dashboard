@@ -7,6 +7,7 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LoginPage from './content/customs/login/LoginPage';
+import UserPage from './content/customs/user/UserPage';
 
 const Loader = (Component) => (props) =>
 (
@@ -119,6 +120,16 @@ const routes: RouteObject[] = [
         path: '*',
         element: <Status404 />
       }
+    ]
+  },
+  {
+    path: 'home',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <UserPage />
+      },
     ]
   },
   {
