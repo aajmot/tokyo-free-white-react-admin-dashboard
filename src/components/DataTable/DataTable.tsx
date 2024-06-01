@@ -24,7 +24,7 @@ export default function DataTable(props: IDataTableModel) {
                         {(props?.data ?? []).map((dataItem, dataIndex) => (
                             <TableRow key={"dataRow_" + dataIndex}>
                                 {(props?.headers ?? []).map((headerItem, headerIndex) => (
-                                    <TableCell key={"header_" + dataIndex}>{dataItem[headerItem]}</TableCell>
+                                    <TableCell key={"dataRow_header_" + headerIndex}>{dataItem[headerItem]}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
