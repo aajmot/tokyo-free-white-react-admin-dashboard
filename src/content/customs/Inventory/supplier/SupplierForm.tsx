@@ -2,10 +2,10 @@
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider, Grid, MenuItem, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { RoleService } from "src/Admin/Services/RoleService";
-import { CustomerService } from "src/Inevntory/Services/CustomerService";
+import { SupplierService } from "src/Inevntory/Services/SupplierService";
 
-export default function CustomerForm(props) {
-    const [service, setservice] = useState(new CustomerService());
+export default function SupplierForm(props) {
+    const [service, setservice] = useState(new SupplierService());
     const [typeList, settypeList] = useState([]);
     const [type, settype] = useState("Default");
 
@@ -18,13 +18,13 @@ export default function CustomerForm(props) {
         e.preventDefault();
         props?.setloader(true);
         const payload = {
-            customerType: type,
-            customerName: e.currentTarget["customerName"]?.value,
-            customerPhone: e.currentTarget["customerPhone"]?.value,
-            customerEmail: e.currentTarget["customerEmail"]?.value,
-            customerAddress: e.currentTarget["customerAddress"]?.value,
-            customerPinCode: e.currentTarget["customerPinCode"]?.value,
-            customerTaxId: e.currentTarget["customerTaxId"]?.value
+            supplierType: type,
+            supplierName: e.currentTarget["supplierName"]?.value,
+            supplierPhone: e.currentTarget["supplierPhone"]?.value,
+            supplierEmail: e.currentTarget["supplierEmail"]?.value,
+            supplierAddress: e.currentTarget["supplierAddress"]?.value,
+            supplierPinCode: e.currentTarget["supplierPinCode"]?.value,
+            supplierTaxId: e.currentTarget["supplierTaxId"]?.value
         };
         debugger;
         var response = await service.create(payload);
@@ -62,7 +62,7 @@ export default function CustomerForm(props) {
             {typeList?.length > 0 && <TextField
                 required
                 select
-                id="customerType"
+                id="SupplierType"
                 label="Type"
                 value={type}
                 onChange={handleTypeChange}
@@ -77,40 +77,40 @@ export default function CustomerForm(props) {
 
             <TextField
                 required
-                id="customerName"
+                id="supplierName"
                 label="Name"
             />
 
             <TextField
                 required
-                id="customerPhone"
+                id="supplierPhone"
                 label="Phone"
             />
 
             <TextField
                 required
-                id="customerEmail"
+                id="supplierEmail"
                 label="Email"
                 type="email"
             />
 
             <TextField
                 required
-                id="customerAddress"
+                id="supplierAddress"
                 label="Address"
                 multiline
             />
 
             <TextField
                 required
-                id="customerPinCode"
+                id="supplierPinCode"
                 label="Pin Code"
             />
 
 
             <TextField
                 required
-                id="customerTaxId"
+                id="supplierTaxId"
                 label="Tax Id"
             />
 

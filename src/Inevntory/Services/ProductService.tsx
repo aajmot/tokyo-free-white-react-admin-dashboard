@@ -1,7 +1,7 @@
-import { BaseService } from "../../Shared/Services/BaseService";
+import { BaseService, ServiceTypeEnum } from "../../Shared/Services/BaseService";
 
 export class ProductService extends BaseService {
     public constructor(){
-        super("Products");
+        super("Products", ServiceTypeEnum.INVENTORY);
     }
 }
