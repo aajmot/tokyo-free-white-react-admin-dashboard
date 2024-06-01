@@ -124,7 +124,7 @@ const routes: RouteObject[] = [
     ]
   },
   {
-    path: 'home',
+    path: 'admin',
     element: <SidebarLayout />,
     children: [
       {
@@ -141,6 +141,25 @@ const routes: RouteObject[] = [
       },
     ]
   },
+  {
+    path: 'inventory',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to="user" replace />
+      },
+      {
+        path: 'customer',
+        element: <UserPage />
+      },
+      {
+        path: 'supplier',
+        element: <RolePage />
+      },
+    ]
+  },
+
   {
     path: 'dashboards',
     element: <SidebarLayout />,

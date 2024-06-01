@@ -28,7 +28,7 @@ export default function LoginPage() {
         if (response?.isSuccess) {
             sessionStorage.setItem("user_name", paylaod["userName"]);
             sessionStorage.setItem("user_token", response?.data[0]?.token);
-            navigate('/home', { replace: true });
+            navigate('/admin', { replace: true });
         }
         else {
             settoast({ open: true, type: "error", header: "", body: response?.message })
