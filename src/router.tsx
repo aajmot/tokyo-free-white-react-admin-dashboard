@@ -6,9 +6,10 @@ import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import LoginPage from './content/customs/login/LoginPage';
-import UserPage from './content/customs/user/UserPage';
-import RolePage from './content/customs/role/RolePage';
+import LoginPage from './content/customs/Admin/login/LoginPage';
+import UserPage from './content/customs/Admin/user/UserPage';
+import RolePage from './content/customs/Admin/role/RolePage';
+import CustomerPage from './content/customs/Inventory/customer/CustomerPage';
 
 const Loader = (Component) => (props) =>
 (
@@ -147,11 +148,11 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '',
-        element: <Navigate to="user" replace />
+        element: <Navigate to="customer" replace />
       },
       {
         path: 'customer',
-        element: <UserPage />
+        element: <CustomerPage />
       },
       {
         path: 'supplier',
