@@ -46,7 +46,7 @@ export default function Toaster(props: ToasterModel) {
       >
         <Alert
           onClose={handleClose}
-          severity={(props?.type) as AlertColor}
+          severity={(props?.type == '' ? 'success' : props?.type) as AlertColor}
           variant="filled"
         >
           {props.body}
