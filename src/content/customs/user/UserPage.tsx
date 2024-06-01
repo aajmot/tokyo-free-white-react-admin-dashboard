@@ -16,7 +16,7 @@ export default function UserPage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
 
-    const _headers = ["id", "firstName", "lastName", "userName", "email", "gender"];
+    const _headers = ["firstName", "lastName", "userName", "email", "gender", "roles"];
     let _data = [];
     const [service, Setservice] = useState(new UserService());
     const [mode, setmode] = useState("list");
@@ -30,7 +30,8 @@ export default function UserPage() {
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
-            setlistData({ headers: _headers, data: _data })
+            _data.forEach(p => p.roles = p?.role?.name)
+            setlistData({ headers: _headers, data: _data });
         }
     }
 

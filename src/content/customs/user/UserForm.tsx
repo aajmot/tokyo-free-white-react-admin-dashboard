@@ -46,6 +46,10 @@ export default function UserForm(props) {
         props?.setloader(false);
     }
 
+    const reset = () => {
+
+    }
+
     const getInitData = async () => {
         //get  genders
         setgenderList(["Male", "Female", "Others"]);
