@@ -11,6 +11,7 @@ import UserPage from './content/customs/Admin/user/UserPage';
 import RolePage from './content/customs/Admin/role/RolePage';
 import CustomerPage from './content/customs/Inventory/customer/CustomerPage';
 import SupplierPage from './content/customs/Inventory/supplier/SupplierPage';
+import ProductPage from './content/customs/Inventory/product/ProductPage';
 
 const Loader = (Component) => (props) =>
 (
@@ -158,6 +159,10 @@ const routes: RouteObject[] = [
       {
         path: 'supplier',
         element: <SupplierPage />
+      },
+      {
+        path: 'product',
+        element: <ProductPage />
       },
     ]
   },
