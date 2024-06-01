@@ -16,7 +16,44 @@ export default function UserPage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
 
-    const _headers = ["firstName", "lastName", "userName", "email", "gender", "roles"];
+    const _headers = [
+        {
+            label: "First Name",
+            key: "firstName",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Last Name",
+            key: "lastName",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "User Name",
+            key: "userName",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Email",
+            key: "email",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Gender",
+            key: "gender",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Role",
+            key: "roles",
+            type: "string",
+            format: ""
+        },
+    ];
     let _data = [];
     const [service, Setservice] = useState(new UserService());
     const [mode, setmode] = useState("list");

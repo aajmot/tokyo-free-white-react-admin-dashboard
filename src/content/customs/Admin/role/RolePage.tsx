@@ -14,7 +14,26 @@ export default function RolePage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
 
-    const _headers = ["name", "updatedBy", "updatedDate"];
+    const _headers = [
+        {
+            label: "Role Name",
+            key: "name",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Name",
+            key: "updatedBy",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Modified Date",
+            key: "updatedDate",
+            type: "string",
+            format: ""
+        }
+    ];
     let _data = [];
     const [service, Setservice] = useState(new RoleService());
     const [mode, setmode] = useState<string>("list");

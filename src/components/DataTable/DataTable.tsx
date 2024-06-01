@@ -2,8 +2,14 @@ import { Box, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, 
 import { ChangeEvent, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 interface IDataTableModel {
-    headers: Array<string>,
+    headers: Array<IDataTableHeaderModel>,
     data: any,
+}
+interface IDataTableHeaderModel {
+    label: string,
+    key: string,
+    type: string,
+    format: string
 }
 function DataTable(props: IDataTableModel) {
     let [searchableData, setsearchableData] = useState([]);
@@ -56,7 +62,7 @@ function DataTable(props: IDataTableModel) {
                     <TableHead>
                         <TableRow>
                             {(props?.headers ?? []).map((headerItem, headerIndex) => (
-                                <TableCell key={"header_" + headerIndex}>{headerItem}</TableCell>
+                                <TableCell key={"header_" + headerIndex}>{headerItem.label}</TableCell>
                             ))}
 
                         </TableRow>
@@ -65,7 +71,7 @@ function DataTable(props: IDataTableModel) {
                         {(pageData ?? []).map((dataItem, dataIndex) => (
                             <TableRow key={"dataRow_" + dataIndex}>
                                 {(props?.headers ?? []).map((headerItem, headerIndex) => (
-                                    <TableCell key={"dataRow_header_" + headerIndex}>{dataItem[headerItem]}</TableCell>
+                                    <TableCell key={"dataRow_header_" + headerIndex}>{dataItem[headerItem.key]}</TableCell>
                                 ))}
                             </TableRow>
                         ))}

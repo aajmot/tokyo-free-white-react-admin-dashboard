@@ -15,8 +15,39 @@ import { CustomerService } from "src/Inevntory/Services/CustomerService";
 export default function CustomerPage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
+    const _headers = [
+        {
+            label: "Type",
+            key: "customerType",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Name",
+            key: "customerName",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Phone Number",
+            key: "customerPhone",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Email",
+            key: "customerEmail",
+            type: "string",
+            format: ""
+        },
+        {
+            label: "Address",
+            key: "customerAddress",
+            type: "string",
+            format: ""
+        }
+    ];
 
-    const _headers = ["customerType", "customerName", "customerPhone", "customerEmail", "customerAddress", "customerPinCode"];
     let _data = [];
     const [service, Setservice] = useState(new CustomerService());
     const [mode, setmode] = useState("list");
@@ -27,11 +58,11 @@ export default function CustomerPage() {
     const [formParam, setformParam] = useState({});
 
     const loadTabledata = async () => {
+        debugger;
         setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
-            _data.forEach(p => p.roles = p?.role?.name)
             setlistData({ headers: _headers, data: _data });
         }
         setloader({ loading: false });

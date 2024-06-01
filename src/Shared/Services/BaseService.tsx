@@ -1,12 +1,18 @@
 import axios from 'axios';
 export class BaseService {
 
-    public baseUrl: string = "http://admin-api.runasp.net/api/v1/";
+    public baseUrl: string = "";
 
     _path: string;
 
-    public constructor(path: string) {
+    public constructor(path: string, module: ServiceTypeEnum = ServiceTypeEnum.ADMIN) {
         this._path = path;
+        if (module == ServiceTypeEnum.ADMIN) {
+            this.baseUrl = "http://admin-api.runasp.net/api/v1/";
+        }
+        else if (module == ServiceTypeEnum.INVENTORY) {
+            this.baseUrl = "http://inventory-api.runasp.net/api/v1/";
+        }
     }
 
     public getHeader(): any {
@@ -90,4 +96,9 @@ export class BaseService {
 
     }
 
+}
+
+export enum ServiceTypeEnum {
+    ADMIN = "admin",
+    INVENTORY = "inventory"
 }
