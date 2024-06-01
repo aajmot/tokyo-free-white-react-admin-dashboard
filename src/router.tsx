@@ -10,6 +10,7 @@ import LoginPage from './content/customs/Admin/login/LoginPage';
 import UserPage from './content/customs/Admin/user/UserPage';
 import RolePage from './content/customs/Admin/role/RolePage';
 import CustomerPage from './content/customs/Inventory/customer/CustomerPage';
+import SupplierPage from './content/customs/Inventory/supplier/SupplierPage';
 
 const Loader = (Component) => (props) =>
 (
@@ -156,7 +157,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'supplier',
-        element: <RolePage />
+        element: <SupplierPage />
       },
     ]
   },
