@@ -277,6 +277,19 @@ function SidebarMenu() {
                   Products
                 </Button>
               </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/inventory/sales-order"
+                  startIcon={<MmsTwoToneIcon />}
+                >
+                  SalesOrder
+                </Button>
+              </ListItem>
+
+
 
             </List>
           </SubMenuWrapper>
