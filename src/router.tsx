@@ -8,6 +8,7 @@ import BaseLayout from 'src/layouts/BaseLayout';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LoginPage from './content/customs/login/LoginPage';
 import UserPage from './content/customs/user/UserPage';
+import RolePage from './content/customs/role/RolePage';
 
 const Loader = (Component) => (props) =>
 (
@@ -128,7 +129,15 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '',
+        element: <Navigate to="user" replace />
+      },
+      {
+        path: 'user',
         element: <UserPage />
+      },
+      {
+        path: 'role',
+        element: <RolePage />
       },
     ]
   },
