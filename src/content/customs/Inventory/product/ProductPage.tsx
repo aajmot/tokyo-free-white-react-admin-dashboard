@@ -41,6 +41,12 @@ export default function ProductPage() {
             format: ""
         },
         {
+            label: "Unit(S)",
+            key: "secondaryUnit",
+            type: "string",
+            format: ""
+        },
+        {
             label: "GST",
             key: "gstPercentage",
             type: "string",
