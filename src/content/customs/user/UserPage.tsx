@@ -27,12 +27,14 @@ export default function UserPage() {
     const [formParam, setformParam] = useState({});
 
     const loadTabledata = async () => {
+        setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
             _data.forEach(p => p.roles = p?.role?.name)
             setlistData({ headers: _headers, data: _data });
         }
+        setloader({ loading: false });
     }
 
     useEffect(() => {
@@ -57,7 +59,7 @@ export default function UserPage() {
         <PageTitleWrapper>
             <PageTitle
                 heading="Users"
-                subHeading={"Users " + { mode }}
+                subHeading={"Users " + mode}
                 mode={setmode}
                 docs={mode}
             />

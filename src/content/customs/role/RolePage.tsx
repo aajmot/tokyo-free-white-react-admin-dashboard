@@ -14,10 +14,10 @@ export default function RolePage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
 
-    const _headers = ["name","updatedBy","updatedDate"];
+    const _headers = ["name", "updatedBy", "updatedDate"];
     let _data = [];
     const [service, Setservice] = useState(new RoleService());
-    const [mode, setmode] = useState("list");
+    const [mode, setmode] = useState<string>("list");
     let [listData, setlistData] = useState({
         headers: _headers,
         data: []
@@ -25,11 +25,13 @@ export default function RolePage() {
     const [formParam, setformParam] = useState({});
 
     const loadTabledata = async () => {
+        setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
             setlistData({ headers: _headers, data: _data });
         }
+        setloader({ loading: false });
     }
 
     useEffect(() => {
@@ -54,7 +56,7 @@ export default function RolePage() {
         <PageTitleWrapper>
             <PageTitle
                 heading="Roles"
-                subHeading={"Roles " + { mode }}
+                subHeading={"Roles " + mode}
                 mode={setmode}
                 docs={mode}
             />
