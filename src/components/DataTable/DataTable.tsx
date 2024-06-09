@@ -86,20 +86,24 @@ function DataTable(props: IDataTableModel) {
                                 {(props?.enableEdit || props?.enableDelete) &&
                                     <TableCell key={"dataRow_action_" + dataIndex}>
 
-                                        <IconButton
+                                        {props?.enableEdit && <IconButton
                                             onClick={() => {
                                                 props?.editAction(dataItem)
                                             }}
                                         >
                                             <EditIcon color='info' fontSize='small' titleAccess='edit_action' />
                                         </IconButton >
-                                        <IconButton
-                                            onClick={() => {
-                                                props?.deleteAction(dataItem)
-                                            }}
-                                        >
-                                            <DeleteIcon color='warning' fontSize='small' titleAccess='delete_action' />
-                                        </IconButton>
+                                        }
+                                        {
+                                            props?.enableDelete &&
+                                            <IconButton
+                                                onClick={() => {
+                                                    props?.deleteAction(dataItem)
+                                                }}
+                                            >
+                                                <DeleteIcon color='warning' fontSize='small' titleAccess='delete_action' />
+                                            </IconButton>
+                                        }
                                     </TableCell>
                                 }
 
