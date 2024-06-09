@@ -17,7 +17,8 @@ export default function SupplierForm(props) {
     const save = async (e: any) => {
         e.preventDefault();
         props?.setloader(true);
-        const payload = {
+        let payload = {
+            id: null,
             supplierType: type,
             supplierName: e.currentTarget["supplierName"]?.value,
             supplierPhone: e.currentTarget["supplierPhone"]?.value,
@@ -26,15 +27,32 @@ export default function SupplierForm(props) {
             supplierPinCode: e.currentTarget["supplierPinCode"]?.value,
             supplierTaxId: e.currentTarget["supplierTaxId"]?.value
         };
-        debugger;
-        var response = await service.create(payload);
-        if (response && response.isSuccess) {
-            props?.settoaster({ open: true, type: "success", header: "", body: response?.message })
+        //update
+        if (props?.data?.id > 0) {
+            payload = {
+                ...payload
+                , id: props?.data?.id
+            };
+            var responseUpdate = await service.update(payload);
+            if (responseUpdate && responseUpdate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseUpdate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseUpdate?.message })
+            }
+            props?.setloader(false);
         }
-        else {
-            props?.settoaster({ open: true, type: "error", header: "", body: response?.message })
+        else //create
+        {
+            var responseCreate = await service.create(payload);
+            if (responseCreate && responseCreate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseCreate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseCreate?.message })
+            }
+            props?.setloader(false);
         }
-        props?.setloader(false);
     }
 
     const reset = () => {
@@ -64,7 +82,7 @@ export default function SupplierForm(props) {
                 select
                 id="SupplierType"
                 label="Type"
-                value={type}
+                defaultValue={props?.data?.customerType ?? type}
                 onChange={handleTypeChange}
             >
                 {typeList.map((option, index) => (
@@ -79,12 +97,14 @@ export default function SupplierForm(props) {
                 required
                 id="supplierName"
                 label="Name"
+                defaultValue={props?.data?.supplierName}
             />
 
             <TextField
                 required
                 id="supplierPhone"
                 label="Phone"
+                defaultValue={props?.data?.supplierPhone}
             />
 
             <TextField
@@ -92,6 +112,7 @@ export default function SupplierForm(props) {
                 id="supplierEmail"
                 label="Email"
                 type="email"
+                defaultValue={props?.data?.supplierEmail}
             />
 
             <TextField
@@ -99,12 +120,14 @@ export default function SupplierForm(props) {
                 id="supplierAddress"
                 label="Address"
                 multiline
+                defaultValue={props?.data?.supplierAddress}
             />
 
             <TextField
                 required
                 id="supplierPinCode"
                 label="Pin Code"
+                defaultValue={props?.data?.supplierPinCode}
             />
 
 
@@ -112,6 +135,7 @@ export default function SupplierForm(props) {
                 required
                 id="supplierTaxId"
                 label="Tax Id"
+                defaultValue={props?.data?.supplierTaxId}
             />
 
             <CardContent>
