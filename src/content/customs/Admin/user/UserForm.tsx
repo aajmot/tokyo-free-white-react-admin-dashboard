@@ -10,7 +10,7 @@ export default function UserForm(props) {
     const [roleService, setroleService] = useState(new RoleService());
     const [genderList, setgenderList] = useState([]);
     const [roleList, setroleList] = useState([]);
-    const [dob, setdob] = useState('01/01/2020');
+    const [dob, setdob] = useState('01/01/2000');
     const [gender, setgender] = useState("Others");
     const [role, setrole] = useState('');
 
@@ -25,7 +25,7 @@ export default function UserForm(props) {
     const save = async (e: any) => {
         e.preventDefault();
         props?.setloader(true);
-        const payload = {
+        let payload = {
             userName: e.currentTarget["userName"]?.value,
             password: e.currentTarget["password"]?.value,
             email: e.currentTarget["email"]?.value,
@@ -33,17 +33,35 @@ export default function UserForm(props) {
             lastName: e.currentTarget["lastName"]?.value,
             gender: gender,
             dateOfBirth: dob,
-            roleId: role
+            roleId: role,
+            id: null
         };
-        debugger;
-        var response = await service.create(payload);
-        if (response && response.isSuccess) {
-            props?.settoaster({ open: true, type: "success", header: "", body: response?.message })
+        //update
+        if (props?.data?.id > 0) {
+            payload = {
+                ...payload
+                , id: props?.data?.id
+            };
+            var responseUpdate = await service.update(payload);
+            if (responseUpdate && responseUpdate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseUpdate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseUpdate?.message })
+            }
+            props?.setloader(false);
         }
-        else {
-            props?.settoaster({ open: true, type: "error", header: "", body: response?.message })
+        else //create
+        {
+            var responseCreate = await service.create(payload);
+            if (responseCreate && responseCreate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseCreate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseCreate?.message })
+            }
+            props?.setloader(false);
         }
-        props?.setloader(false);
     }
 
     const reset = () => {
@@ -80,6 +98,7 @@ export default function UserForm(props) {
                 required
                 id="userName"
                 label="UserName"
+                defaultValue={props?.data?.userName}
             />
 
             <TextField
@@ -87,6 +106,7 @@ export default function UserForm(props) {
                 id="password"
                 label="Password"
                 type="password"
+                defaultValue={props?.data?.password}
             />
 
             <TextField
@@ -94,26 +114,29 @@ export default function UserForm(props) {
                 type="email"
                 id="email"
                 label="Email"
+                defaultValue={props?.data?.email}
             />
 
             <TextField
                 required
                 id="firstName"
                 label="FirstName"
+                defaultValue={props?.data?.firstName}
             />
 
             <TextField
                 required
                 id="lastName"
                 label="LastName"
+                defaultValue={props?.data?.lastName}
             />
 
             {gender.length > 0 && <TextField
                 id="gender"
                 select
                 label="Gender"
-                value={gender}
                 onChange={handleGenderChange}
+                defaultValue={props?.data?.gender ?? gender}
             >
                 {genderList.map((option, index) => (
                     <MenuItem key={"gender_" + index} value={option}>
@@ -129,8 +152,8 @@ export default function UserForm(props) {
                 type="date"
                 id="dateOfBirth"
                 label="DatOfBirth"
-                value={dob}
                 onChange={(e) => setdob(e.target.value)}
+                defaultValue={ new Date()}
             />
 
 
@@ -139,8 +162,8 @@ export default function UserForm(props) {
                 id="roleId"
                 select
                 label="Role"
-                value={role}
                 onChange={handleRoleChange}
+                defaultValue={props?.data?.roleId ?? role}
             >
                 {roleList.map((option, index) => (
                     <MenuItem key={"role_" + index} value={option?.id}>
