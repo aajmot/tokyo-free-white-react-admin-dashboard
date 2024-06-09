@@ -8,6 +8,7 @@ interface PageTitleProps {
   subHeading?: string;
   docs?: string;
   mode?: Function;
+  addAction?: Function
 }
 
 const PageTitle: FC<PageTitleProps> = ({
@@ -15,6 +16,7 @@ const PageTitle: FC<PageTitleProps> = ({
   subHeading = '',
   docs = '',
   mode = null,
+  addAction = null,
   ...rest
 }) => {
   return (
@@ -31,12 +33,13 @@ const PageTitle: FC<PageTitleProps> = ({
         <Typography variant="subtitle2">{subHeading}</Typography>
       </Grid>
       <Grid item>
-        {mode && <Button onClick={() => {
-          mode(docs == "list" ? "add" : "list")
-        }}
+        {mode && addAction && <Button
           variant="contained"
           sx={{ mt: { xs: 2, md: 0 } }}
           startIcon={<AddTwoToneIcon fontSize="small" />}
+          onClick={() => {
+            addAction()
+          }}
         >
           {docs == "list" ? "Add" : "Cancel"}
         </Button>}
@@ -50,6 +53,7 @@ PageTitle.propTypes = {
   subHeading: PropTypes.string,
   docs: PropTypes.string,
   mode: PropTypes.func,
+  addAction: PropTypes.func
 };
 
 export default PageTitle;

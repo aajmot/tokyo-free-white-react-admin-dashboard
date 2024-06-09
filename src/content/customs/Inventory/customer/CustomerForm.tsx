@@ -7,6 +7,7 @@ import { CustomerService } from "src/Inevntory/Services/CustomerService";
 export default function CustomerForm(props) {
     const [service, setservice] = useState(new CustomerService());
     const [typeList, settypeList] = useState([]);
+    const [formData, setformData] = useState({});
     const [type, settype] = useState("Default");
 
 
@@ -17,7 +18,8 @@ export default function CustomerForm(props) {
     const save = async (e: any) => {
         e.preventDefault();
         props?.setloader(true);
-        const payload = {
+        let payload = {
+            id: null,
             customerType: type,
             customerName: e.currentTarget["customerName"]?.value,
             customerPhone: e.currentTarget["customerPhone"]?.value,
@@ -26,15 +28,33 @@ export default function CustomerForm(props) {
             customerPinCode: e.currentTarget["customerPinCode"]?.value,
             customerTaxId: e.currentTarget["customerTaxId"]?.value
         };
-        debugger;
-        var response = await service.create(payload);
-        if (response && response.isSuccess) {
-            props?.settoaster({ open: true, type: "success", header: "", body: response?.message })
+        //update
+        if (props?.data?.id > 0) {
+            payload = {
+                ...payload
+                , id: props?.data?.id
+            };
+            var responseUpdate = await service.update(payload);
+            if (responseUpdate && responseUpdate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseUpdate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseUpdate?.message })
+            }
+            props?.setloader(false);
         }
-        else {
-            props?.settoaster({ open: true, type: "error", header: "", body: response?.message })
+        else //create
+        {
+            var responseCreate = await service.create(payload);
+            if (responseCreate && responseCreate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseCreate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseCreate?.message })
+            }
+            props?.setloader(false);
         }
-        props?.setloader(false);
+
     }
 
     const reset = () => {
@@ -48,7 +68,7 @@ export default function CustomerForm(props) {
 
     useEffect(() => {
         getInitData();
-    }, []);
+    }, [props]);
 
     return (<>
         <Box
@@ -64,7 +84,7 @@ export default function CustomerForm(props) {
                 select
                 id="customerType"
                 label="Type"
-                value={type}
+                defaultValue={props?.data?.customerType ?? type}
                 onChange={handleTypeChange}
             >
                 {typeList.map((option, index) => (
@@ -79,12 +99,14 @@ export default function CustomerForm(props) {
                 required
                 id="customerName"
                 label="Name"
+                defaultValue={props?.data?.customerName}
             />
 
             <TextField
                 required
                 id="customerPhone"
                 label="Phone"
+                defaultValue={props?.data?.customerPhone}
             />
 
             <TextField
@@ -92,6 +114,7 @@ export default function CustomerForm(props) {
                 id="customerEmail"
                 label="Email"
                 type="email"
+                defaultValue={props?.data?.customerEmail}
             />
 
             <TextField
@@ -99,12 +122,14 @@ export default function CustomerForm(props) {
                 id="customerAddress"
                 label="Address"
                 multiline
+                defaultValue={props?.data?.customerAddress}
             />
 
             <TextField
                 required
                 id="customerPinCode"
                 label="Pin Code"
+                defaultValue={props?.data?.customerPinCode}
             />
 
 
@@ -112,6 +137,7 @@ export default function CustomerForm(props) {
                 required
                 id="customerTaxId"
                 label="Tax Id"
+                defaultValue={props?.data?.customerTaxId}
             />
 
             <CardContent>

@@ -15,6 +15,15 @@ import { CustomerService } from "src/Inevntory/Services/CustomerService";
 export default function CustomerPage() {
     const [toaster, settoaster] = useState({ open: false, type: "", header: "", body: "" });
     const [loader, setloader] = useState({ loading: false });
+    const [mode, setmode] = useState("list");
+    const [formParam, setformParam] = useState(
+        {
+            setmode: setmode,
+            settoaster: settoaster,
+            setloader: setloader,
+            data: null
+        }
+    );
     const _headers = [
         {
             label: "Type",
@@ -50,31 +59,69 @@ export default function CustomerPage() {
 
     let _data = [];
     const [service, Setservice] = useState(new CustomerService());
-    const [mode, setmode] = useState("list");
+
+
+
+    const editAction = async (rowData) => {
+        setmode("edit");
+        setformParam({
+            ...formParam,
+            data: rowData
+        })
+    }
+    const deleteAction = async (rowData) => {
+        alert("delete");
+    }
+
+
     let [listData, setlistData] = useState({
         headers: _headers,
-        data: []
+        data: [],
+        enableEdit: true,
+        enableDelete: true,
+        editAction: editAction,
+        deleteAction: deleteAction
     });
-    const [formParam, setformParam] = useState({});
+
+
+
 
     const loadTabledata = async () => {
-        debugger;
         setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
-            setlistData({ headers: _headers, data: _data });
+            setlistData(
+                {
+                    ...listData,
+                    data: _data
+                }
+
+            );
         }
         setloader({ loading: false });
     }
 
-    useEffect(() => {
+    const addAction = () => {
+        if (mode == "list") {
+            setmode("add");
+            setformParam({
+                ...formParam,
+                data: null
+            })
+        }
+        else {
+            setmode("list");
+        }
+
+    }
+
+    const loadInit = () => {
         loadTabledata();
-        setformParam({
-            setmode: setmode,
-            settoaster: settoaster,
-            setloader: setloader
-        })
+    }
+
+    useEffect(() => {
+        loadInit();
     }, []);
 
 
@@ -93,12 +140,15 @@ export default function CustomerPage() {
                 subHeading={"Customers " + mode}
                 mode={setmode}
                 docs={mode}
+                addAction={addAction}
             />
         </PageTitleWrapper>
 
         <Container maxWidth="lg">
-            {(mode === "list") && <DataTable {...listData} />}
-            {(mode === "add") && <CustomerForm {...formParam} />}
+            {(mode === "list") ? <DataTable {...listData} />
+                :
+                <CustomerForm {...formParam} />
+            }
         </Container>
 
     </>);

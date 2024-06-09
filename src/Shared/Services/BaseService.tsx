@@ -9,9 +9,11 @@ export class BaseService {
         this._path = path;
         if (module == ServiceTypeEnum.ADMIN) {
             this.baseUrl = "http://admin-api.runasp.net/api/v1/";
+            //this.baseUrl = "http://localhost:4200/api/v1/";
         }
         else if (module == ServiceTypeEnum.INVENTORY) {
             this.baseUrl = "http://inventory-api.runasp.net/api/v1/";
+            //this.baseUrl = "http://localhost:4201/api/v1/";
         }
     }
 

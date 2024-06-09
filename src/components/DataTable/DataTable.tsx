@@ -1,9 +1,16 @@
-import { Box, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material"
+import { Box, Checkbox, colors, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 interface IDataTableModel {
     headers: Array<IDataTableHeaderModel>,
     data: any,
+    enableEdit?: boolean,
+    enableDelete?: boolean,
+    editAction?: Function,
+    deleteAction?: Function
 }
 interface IDataTableHeaderModel {
     label: string,
@@ -64,7 +71,9 @@ function DataTable(props: IDataTableModel) {
                             {(props?.headers ?? []).map((headerItem, headerIndex) => (
                                 <TableCell key={"header_" + headerIndex}>{headerItem.label}</TableCell>
                             ))}
-
+                            {(props?.enableEdit || props?.enableDelete) &&
+                                <TableCell key={"header_action"}>Action</TableCell>
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -73,6 +82,28 @@ function DataTable(props: IDataTableModel) {
                                 {(props?.headers ?? []).map((headerItem, headerIndex) => (
                                     <TableCell key={"dataRow_header_" + headerIndex}>{dataItem[headerItem.key]}</TableCell>
                                 ))}
+
+                                {(props?.enableEdit || props?.enableDelete) &&
+                                    <TableCell key={"dataRow_action_" + dataIndex}>
+
+                                        <IconButton
+                                            onClick={() => {
+                                                props?.editAction(dataItem)
+                                            }}
+                                        >
+                                            <EditIcon color='info' fontSize='small' titleAccess='edit_action' />
+                                        </IconButton >
+                                        <IconButton
+                                            onClick={() => {
+                                                props?.deleteAction(dataItem)
+                                            }}
+                                        >
+                                            <DeleteIcon color='warning' fontSize='small' titleAccess='delete_action' />
+                                        </IconButton>
+                                    </TableCell>
+                                }
+
+
                             </TableRow>
                         ))}
 
