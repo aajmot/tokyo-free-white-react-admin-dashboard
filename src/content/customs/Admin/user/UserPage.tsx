@@ -56,34 +56,82 @@ export default function UserPage() {
     ];
     let _data = [];
     const [service, Setservice] = useState(new UserService());
+
+    const editAction = async (rowData) => {
+        setmode("edit");
+        setformParam({
+            ...formParam,
+            data: rowData
+        })
+    }
+    const deleteAction = async (rowData) => {
+        if (confirm("do you want delete this item?")) {
+            setloader({ loading: true });
+            const deleteResult = await service.delete({ id: rowData?.id });
+            if (deleteResult && deleteResult.isSuccess) {
+                settoaster({ open: true, type: "success", header: "", body: deleteResult?.message });
+                loadTabledata();
+            }
+            else {
+                settoaster({ open: true, type: "error", header: "", body: deleteResult?.message });
+            }
+            setloader({ loading: false });
+        }
+    }
+
+
     const [mode, setmode] = useState("list");
     let [listData, setlistData] = useState({
         headers: _headers,
-        data: []
+        data: [],
+        enableEdit: true,
+        enableDelete: true,
+        editAction: editAction,
+        deleteAction: deleteAction
     });
-    const [formParam, setformParam] = useState({});
+    const [formParam, setformParam] = useState(
+        {
+            setmode: setmode,
+            settoaster: settoaster,
+            setloader: setloader,
+            data: null
+        }
+    );
 
     const loadTabledata = async () => {
         setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
-            _data.forEach(p => p.roles = p?.role?.name)
-            setlistData({ headers: _headers, data: _data });
+            _data.forEach(p => p.roles = p?.role?.name);
+            setlistData(
+                {
+                    ...listData,
+                    data: _data
+                }
+            );
         }
         setloader({ loading: false });
     }
 
-    useEffect(() => {
+    const addAction = () => {
+        if (mode == "list") {
+            setmode("add");
+            setformParam({
+                ...formParam,
+                data: null
+            })
+        }
+        else {
+            setmode("list");
+        }
+    }
+    const loadInit = () => {
         loadTabledata();
-        setformParam({
-            setmode: setmode,
-            settoaster: settoaster,
-            setloader: setloader
-        })
+    }
+    useEffect(() => {
+        loadInit();
     }, []);
-
-
 
     return (<>
 
@@ -99,12 +147,15 @@ export default function UserPage() {
                 subHeading={"Users " + mode}
                 mode={setmode}
                 docs={mode}
+                addAction={addAction}
             />
         </PageTitleWrapper>
 
         <Container maxWidth="lg">
-            {(mode === "list") && <DataTable {...listData} />}
-            {(mode === "add") && <UserForm {...formParam} />}
+            {(mode === "list") ? <DataTable {...listData} />
+                :
+                <UserForm {...formParam} />
+            }
         </Container>
 
     </>);
