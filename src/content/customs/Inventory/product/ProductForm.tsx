@@ -6,7 +6,7 @@ import { ProductService } from "src/Inevntory/Services/ProductService";
 
 export default function ProductForm(props) {
     const [service, setservice] = useState(new ProductService());
-    const [typeList, settypeList] = useState([]);
+    const [typeList, settypeList] = useState(["Default", "Bronze", "Silver", "Gold", "Platinum"]);
     const [type, settype] = useState("Default");
 
 
@@ -17,7 +17,7 @@ export default function ProductForm(props) {
     const save = async (e: any) => {
         e.preventDefault();
         props?.setloader(true);
-        const payload = {
+        let payload = {
             name: e.currentTarget["name"]?.value,
             description: e.currentTarget["description"]?.value,
             hsn: e.currentTarget["hsn"]?.value,
@@ -27,17 +27,35 @@ export default function ProductForm(props) {
             brandName: e.currentTarget["brandName"]?.value,
             manufacturer: e.currentTarget["manufacturer"]?.value,
             composition: e.currentTarget["composition"]?.value,
-            tags: e.currentTarget["tags"]?.value
+            tags: e.currentTarget["tags"]?.value,
+            id: null
         };
-        debugger;
-        var response = await service.create(payload);
-        if (response && response.isSuccess) {
-            props?.settoaster({ open: true, type: "success", header: "", body: response?.message })
+        //update
+        if (props?.data?.id > 0) {
+            payload = {
+                ...payload
+                , id: props?.data?.id
+            };
+            var responseUpdate = await service.update(payload);
+            if (responseUpdate && responseUpdate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseUpdate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseUpdate?.message })
+            }
+            props?.setloader(false);
         }
-        else {
-            props?.settoaster({ open: true, type: "error", header: "", body: response?.message })
+        else //create
+        {
+            var responseCreate = await service.create(payload);
+            if (responseCreate && responseCreate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseCreate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseCreate?.message })
+            }
+            props?.setloader(false);
         }
-        props?.setloader(false);
     }
 
     const reset = () => {
@@ -45,8 +63,6 @@ export default function ProductForm(props) {
     }
 
     const getInitData = async () => {
-        //get  genders
-        settypeList(["Default", "Bronze", "Silver", "Gold", "Platinum"]);
     }
 
     useEffect(() => {
@@ -62,50 +78,40 @@ export default function ProductForm(props) {
             autoComplete="off"
             onSubmit={save}
         >
-            {/* {typeList?.length > 0 && <TextField
-                required
-                select
-                id="ProductType"
-                label="Type"
-                value={type}
-                onChange={handleTypeChange}
-            >
-                {typeList.map((option, index) => (
-                    <MenuItem key={"type_" + index} value={option}>
-                        {option}
-                    </MenuItem>
-                ))}
-            </TextField>
-            } */}
 
             <TextField
                 required
                 id="name"
                 label="Name"
+                defaultValue={props?.data?.name}
             />
 
             <TextField
                 required
                 id="description"
                 label="Desc."
+                defaultValue={props?.data?.description}
             />
 
             <TextField
                 required
                 id="hsn"
                 label="HSN"
+                defaultValue={props?.data?.hsn}
             />
 
             <TextField
                 required
                 id="primaryUnit"
                 label="Primary Unit"
+                defaultValue={props?.data?.primaryUnit}
             />
 
             <TextField
                 required
                 id="secondaryUnit"
                 label="Secondary Unit"
+                defaultValue={props?.data?.secondaryUnit}
             />
 
 
@@ -114,28 +120,33 @@ export default function ProductForm(props) {
                 id="gstPercentage"
                 label="GST"
                 type="number"
+                defaultValue={props?.data?.gstPercentage}
             />
 
             <TextField
                 required
                 id="brandName"
                 label="Brand"
+                defaultValue={props?.data?.brandName}
             />
             <TextField
                 required
                 id="manufacturer"
                 label="Manufacturer"
+                defaultValue={props?.data?.manufacturer}
             />
 
             <TextField
                 required
                 id="composition"
                 label="Composition"
+                defaultValue={props?.data?.composition}
             />
             <TextField
                 required
                 id="tags"
                 label="tags"
+                defaultValue={props?.data?.tags}
             />
 
             <CardContent>

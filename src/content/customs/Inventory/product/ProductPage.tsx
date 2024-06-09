@@ -75,30 +75,74 @@ export default function ProductPage() {
     let _data = [];
     const [service, Setservice] = useState(new ProductService());
     const [mode, setmode] = useState("list");
+    const editAction = async (rowData) => {
+        setmode("edit");
+        setformParam({
+            ...formParam,
+            data: rowData
+        })
+    }
+    const deleteAction = async (rowData) => {
+        if (confirm("do you want delete this item?")) {
+            setloader({ loading: true });
+            const deleteResult = await service.delete({ id: rowData?.id });
+            if (deleteResult && deleteResult.isSuccess) {
+                settoaster({ open: true, type: "success", header: "", body: deleteResult?.message });
+                loadTabledata();
+            }
+            else {
+                settoaster({ open: true, type: "error", header: "", body: deleteResult?.message });
+            }
+            setloader({ loading: false });
+        }
+    }
+
     let [listData, setlistData] = useState({
         headers: _headers,
-        data: []
+        data: [],
+        enableEdit: true,
+        enableDelete: true,
+        editAction: editAction,
+        deleteAction: deleteAction
     });
-    const [formParam, setformParam] = useState({});
+    const [formParam, setformParam] = useState({
+        setmode: setmode,
+        settoaster: settoaster,
+        setloader: setloader,
+        data: null
+    });
 
+    const addAction = () => {
+        if (mode == "list") {
+            setmode("add");
+            setformParam({
+                ...formParam,
+                data: null
+            })
+        }
+        else {
+            setmode("list");
+        }
+
+    }
     const loadTabledata = async () => {
-        debugger;
         setloader({ loading: true });
         var response = await service.search({});
         if (response.isSuccess) {
             _data = response?.data;
-            setlistData({ headers: _headers, data: _data });
+            setlistData(
+                {
+                    ...listData,
+                    data: _data
+                }
+
+            );
         }
         setloader({ loading: false });
     }
 
     useEffect(() => {
         loadTabledata();
-        setformParam({
-            setmode: setmode,
-            settoaster: settoaster,
-            setloader: setloader
-        })
     }, []);
 
 
@@ -117,12 +161,16 @@ export default function ProductPage() {
                 subHeading={"Products " + mode}
                 mode={setmode}
                 docs={mode}
+                addAction={addAction}
             />
         </PageTitleWrapper>
 
         <Container maxWidth="lg">
-            {(mode === "list") && <DataTable {...listData} />}
-            {(mode === "add") && <ProductForm {...formParam} />}
+            {(mode === "list") ? <DataTable {...listData} />
+                :
+                <ProductForm {...formParam} />
+            }
+
         </Container>
 
     </>);
