@@ -1,39 +1,45 @@
 
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Container, Divider, Grid, MenuItem, TextField } from "@mui/material";
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { RoleService } from "src/Admin/Services/RoleService";
 
 export default function RoleForm(props) {
     const [service, setservice] = useState(new RoleService());
-    const [genderList, setgenderList] = useState([]);
-    const [roleList, setroleList] = useState([]);
-    const [dob, setdob] = useState('01/01/2020');
-    const [gender, setgender] = useState("Others");
-    const [role, setrole] = useState('');
 
-
-    const handleGenderChange = (event) => {
-        setgender(event.target.value);
-    };
-    const handleRoleChange = (event) => {
-        setrole(event.target.value);
-    };
 
     const save = async (e: any) => {
         e.preventDefault();
         props?.setloader(true);
-        const payload = {
+        let payload = {
+            id: null,
             name: e.currentTarget["name"]?.value
         };
-        debugger;
-        var response = await service.create(payload);
-        if (response && response.isSuccess) {
-            props?.settoaster({ open: true, type: "success", header: "", body: response?.message })
+        //update
+        if (props?.data?.id > 0) {
+            payload = {
+                ...payload
+                , id: props?.data?.id
+            };
+            var responseUpdate = await service.update(payload);
+            if (responseUpdate && responseUpdate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseUpdate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseUpdate?.message })
+            }
+            props?.setloader(false);
         }
-        else {
-            props?.settoaster({ open: true, type: "error", header: "", body: response?.message })
+        else //create
+        {
+            var responseCreate = await service.create(payload);
+            if (responseCreate && responseCreate.isSuccess) {
+                props?.settoaster({ open: true, type: "success", header: "", body: responseCreate?.message })
+            }
+            else {
+                props?.settoaster({ open: true, type: "error", header: "", body: responseCreate?.message })
+            }
+            props?.setloader(false);
         }
-        props?.setloader(false);
     }
 
     const reset = () => {
@@ -46,7 +52,7 @@ export default function RoleForm(props) {
 
     useEffect(() => {
         getInitData();
-    }, []);
+    }, [props]);
 
     return (<>
         <Box
@@ -61,6 +67,7 @@ export default function RoleForm(props) {
                 required
                 id="name"
                 label="Role Name"
+                defaultValue={props?.data?.name}
             />
             <CardContent>
                 <Button sx={{ margin: 1 }}
