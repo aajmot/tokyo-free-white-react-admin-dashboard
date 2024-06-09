@@ -70,7 +70,18 @@ export default function CustomerPage() {
         })
     }
     const deleteAction = async (rowData) => {
-        alert("delete");
+        if (confirm("do you want delete this item?")) {
+            setloader({ loading: true });
+            const deleteResult = await service.delete({ id: rowData?.id });
+            if (deleteResult && deleteResult.isSuccess) {
+                settoaster({ open: true, type: "success", header: "", body: deleteResult?.message });
+                loadTabledata();
+            }
+            else {
+                settoaster({ open: true, type: "error", header: "", body: deleteResult?.message });
+            }
+            setloader({ loading: false });
+        }
     }
 
 
