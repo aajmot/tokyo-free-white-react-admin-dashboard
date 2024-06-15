@@ -98,6 +98,26 @@ export class BaseService {
 
     }
 
+    public async get(id: number): Promise<any> {
+        try {
+            const { data, status } = await axios.get(
+                this.baseUrl + this._path+"?id="+id,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: "Bearer " + sessionStorage.getItem("user_token")
+                    },
+
+                },
+            );
+            return data;
+        }
+        catch (error: any) {
+            return error?.response?.data;
+        }
+
+    }
+
 }
 
 export enum ServiceTypeEnum {
